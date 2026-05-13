@@ -1,0 +1,248 @@
+{{ 'section-collection-list.css' | asset_url | stylesheet_tag }}
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+.homepage-hero-grid {
+padding: 0 1.5rem;
+margin-top: 1.2rem;
+margin-bottom: 0.5rem;
+}
+.homepage-hero-grid__title {
+font-size: 1.6rem;
+font-weight: 700;
+text-align: center;
+margin: 0 0 1rem;
+letter-spacing: -0.02em;
+line-height: 1.2;
+}
+.homepage-hero-grid__grid {
+display: flex;
+gap: 0.6rem;
+list-style: none;
+padding: 0;
+margin: 0;
+overflow-x: auto;
+scroll-snap-type: x mandatory;
+-webkit-overflow-scrolling: touch;
+scrollbar-width: none;
+}
+.homepage-hero-grid__grid::-webkit-scrollbar {
+display: none;
+}
+@media screen and (min-width: 750px) {
+.homepage-hero-grid {
+padding: 0;
+max-width: var(--page-width);
+margin: 1.5rem auto 1rem;
+}
+.homepage-hero-grid__title {
+font-size: 2.2rem;
+margin-bottom: 1.5rem;
+}
+.homepage-hero-grid__grid {
+display: grid;
+grid-template-columns: repeat(5, 1fr);
+gap: 0.75rem;
+overflow: visible;
+}
+}
+.homepage-hero-grid__item {
+position: relative;
+border-radius: 12px;
+overflow: hidden;
+min-width: 140px;
+flex: 0 0 auto;
+scroll-snap-align: start;
+aspect-ratio: 1 / 1;
+background: #f5f5f5;
+}
+@media screen and (min-width: 750px) {
+.homepage-hero-grid__item {
+min-width: unset;
+flex: unset;
+}
+}
+.homepage-hero-grid__item a {
+display: block;
+width: 100%;
+height: 100%;
+text-decoration: none;
+color: inherit;
+position: relative;
+}
+.homepage-hero-grid__item img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+transition: transform 0.3s ease;
+}
+.homepage-hero-grid__item:hover img {
+transform: scale(1.05);
+}
+.homepage-hero-grid__overlay {
+position: absolute;
+bottom: 0;
+left: 0;
+right: 0;
+padding: 0.75rem;
+background: linear-gradient(0deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.0) 100%);
+display: flex;
+flex-direction: column;
+justify-content: flex-end;
+min-height: 50%;
+}
+.homepage-hero-grid__label {
+color: #fff;
+font-size: 0.85rem;
+font-weight: 700;
+line-height: 1.2;
+text-transform: uppercase;
+letter-spacing: 0.03em;
+text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+@media screen and (min-width: 750px) {
+.homepage-hero-grid__label {
+font-size: 1.1rem;
+}
+}
+.homepage-hero-grid__subtitle {
+color: rgba(255,255,255,0.9);
+font-size: 0.7rem;
+font-weight: 400;
+margin-top: 0.15rem;
+text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+.hero-brand-tile {
+width: 100%;
+height: 100%;
+display: flex;
+align-items: center;
+justify-content: center;
+transition: transform 0.3s ease;
+}
+.homepage-hero-grid__item:hover .hero-brand-tile {
+transform: scale(1.05);
+}
+.hero-brand-tile svg {
+width: 100%;
+height: 100%;
+}
+.homepage-hero-grid__placeholder {
+width: 100%;
+height: 100%;
+display: flex;
+align-items: center;
+justify-content: center;
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+.homepage-hero-grid__placeholder svg {
+width: 48px;
+height: 48px;
+fill: rgba(255,255,255,0.5);
+}
+{%- endstyle -%}
+
+<div class="homepage-hero-grid">
+{%- unless section.settings.title == blank -%}
+<h2 class="homepage-hero-grid__title {{ section.settings.heading_size }}">
+{{ section.settings.title }}
+</h2>
+{%- endunless -%}
+<ul class="homepage-hero-grid__grid">
+{%- for block in section.blocks -%}
+<li class="homepage-hero-grid__item" {{ block.shopify_attributes }}>
+{%- liquid
+assign tile_collection = block.settings.collection
+assign tile_image = block.settings.image
+assign tile_brand = block.settings.brand_logo
+if tile_brand == blank and tile_image == blank and tile_collection != blank
+if tile_collection.image != blank
+assign tile_image = tile_collection.image
+elsif tile_collection.products.first.featured_image != blank
+assign tile_image = tile_collection.products.first.featured_image
+endif
+endif
+assign tile_link = block.settings.link
+if tile_link == blank and tile_collection != blank
+assign tile_link = tile_collection.url
+endif
+-%}
+<a href="{{ tile_link }}" aria-label="{{ block.settings.label | escape }}">
+{%- if tile_brand == 'hotwheels' -%}
+<div class="hero-brand-tile">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+<rect width="400" height="400" fill="#000000"/>
+<g transform="translate(200,195) scale(1.15)">
+<path d="M-135,35 C-140,15 -125,-20 -105,-40 C-85,-60 -60,-55 -45,-38 C-30,-22 -35,2 -18,-10 C-2,-22 -8,-52 18,-62 C42,-72 54,-45 58,-22 C62,0 72,-14 88,-30 C104,-46 118,-34 124,-12 C130,10 118,40 100,55 C82,68 55,72 35,72 L-85,72 C-115,72 -140,60 -135,35 Z" fill="none" stroke="#FFFFFF" stroke-width="5"/>
+<path d="M-122,32 C-126,16 -114,-10 -98,-28 C-82,-46 -62,-42 -50,-28 C-38,-15 -42,6 -28,-4 C-14,-14 -18,-40 4,-48 C26,-56 36,-34 40,-16 C44,2 52,-8 64,-22 C76,-36 88,-26 94,-8 C100,10 90,35 76,46 C62,56 42,58 26,58 L-74,58 C-100,58 -120,50 -122,32 Z" fill="#000000"/>
+</g>
+<text x="200" y="188" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-style="italic" font-weight="700" font-size="44" fill="#FFFFFF">Hot Wheels</text>
+<text x="200" y="265" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="16" fill="#FFFFFF" letter-spacing="5">MATTEL</text>
+</svg>
+</div>
+{%- elsif tile_brand == 'pokemon' -%}
+<div class="hero-brand-tile">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+<rect width="400" height="400" fill="#FFFFFF"/>
+<g transform="translate(200,200)">
+<circle cx="0" cy="0" r="130" fill="#1a1a1a"/>
+<circle cx="0" cy="0" r="122" fill="#E3350D"/>
+<rect x="-130" y="-8" width="260" height="16" fill="#1a1a1a"/>
+<path d="M-122,0 A122,122 0 0,0 122,0 Z" fill="#FFFFFF"/>
+<rect x="-130" y="-8" width="260" height="16" fill="#1a1a1a"/>
+<circle cx="0" cy="0" r="45" fill="#1a1a1a"/>
+<circle cx="0" cy="0" r="36" fill="#FFFFFF"/>
+<circle cx="0" cy="0" r="22" fill="#1a1a1a"/>
+<circle cx="0" cy="0" r="14" fill="#FFFFFF"/>
+</g>
+</svg>
+</div>
+{%- elsif tile_brand == 'f1' -%}
+<div class="hero-brand-tile">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+<rect width="400" height="400" fill="#FFFFFF"/>
+<g transform="translate(58,105)">
+<polygon points="0,190 0,0 105,0 105,32 42,32 42,82 90,82 90,114 42,114 42,190" fill="#E10600"/>
+<polygon points="135,190 135,52 115,65 115,35 155,0 175,0 175,190" fill="#E10600"/>
+<rect x="195" y="140" width="80" height="18" fill="#E10600" rx="2"/>
+<rect x="210" y="165" width="65" height="12" fill="#E10600" rx="2" opacity="0.7"/>
+<rect x="225" y="182" width="45" height="8" fill="#E10600" rx="2" opacity="0.4"/>
+</g>
+<text x="330" y="300" font-family="Arial,sans-serif" font-size="14" fill="#999999">TM</text>
+</svg>
+</div>
+{%- elsif tile_brand == 'new_arrivals' -%}
+<div class="hero-brand-tile">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+<rect width="400" height="400" fill="#1a1a1a"/>
+<text x="200" y="170" text-anchor="middle" font-family="Arial,sans-serif" font-weight="300" font-size="24" fill="rgba(255,255,255,0.5)" letter-spacing="8">JUST</text>
+<text x="200" y="225" text-anchor="middle" font-family="Impact,'Arial Black','Trebuchet MS',sans-serif" font-weight="900" font-size="56" fill="#FFFFFF" letter-spacing="6">DROPPED</text>
+<rect x="120" y="245" width="160" height="3" rx="1.5" fill="#FF6B00"/>
+<text x="200" y="280" text-anchor="middle" font-family="Arial,sans-serif" font-weight="400" font-size="13" fill="rgba(255,255,255,0.4)" letter-spacing="4">NEW ARRIVALS</text>
+</svg>
+</div>
+{%- elsif tile_image != blank -%}
+{{ tile_image | image_url: width: 600 | image_tag: widths: '300, 450, 600', sizes: '(min-width: 750px) 20vw, 40vw', loading: 'eager', fetchpriority: 'high' }}
+<div class="homepage-hero-grid__overlay">
+<span class="homepage-hero-grid__label">{{ block.settings.label }}</span>
+{%- unless block.settings.subtitle == blank -%}
+<span class="homepage-hero-grid__subtitle">{{ block.settings.subtitle }}</span>
+{%- endunless -%}
+</div>
+{%- else -%}
+<div class="homepage-hero-grid__placeholder">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+</div>
+<div class="homepage-hero-grid__overlay">
+<span class="homepage-hero-grid__label">{{ block.settings.label }}</span>
+</div>
+{%- endif -%}
+</a>
+</li>
+{%- endfor -%}
+</ul>
+</div>
+
+{% schema %}
+{"name":"Homepage Hero Grid","tag":"section","class":"section","disabled_on":{"groups":["header","footer"]},"max_blocks":8,"settings":[{"type":"inline_richtext","id":"title","label":"Heading","default":"Shop by Category"},{"type":"select","id":"heading_size","options":[{"value":"h2","label":"Small"},{"value":"h1","label":"Medium"},{"value":"h0","label":"Large"}],"default":"h1","label":"Heading size"}],"blocks":[{"type":"collection_tile","name":"Collection Tile","settings":[{"type":"collection","id":"collection","label":"Collection","info":"Auto-pulls collection image and link"},{"type":"image_picker","id":"image","label":"Custom image (optional)","info":"Overrides collection image"},{"type":"select","id":"brand_logo","label":"Brand logo tile","options":[{"value":"","label":"None (use image)"},{"value":"hotwheels","label":"Hot Wheels"},{"value":"pokemon","label":"Pokémon"},{"value":"f1","label":"Formula 1"},{"value":"new_arrivals","label":"Just Dropped"}],"default":"","info":"Shows a branded SVG tile instead of an image"},{"type":"text","id":"label","label":"Label","default":"Collection"},{"type":"text","id":"subtitle","label":"Subtitle"},{"type":"url","id":"link","label":"Link (optional)","info":"Overrides collection link"}]}],"presets":[{"name":"Homepage Hero Grid","blocks":[{"type":"collection_tile","settings":{"label":"Pre-Orders","brand_logo":"hotwheels"}},{"type":"collection_tile","settings":{"label":"Die-Cast Cars","brand_logo":"hotwheels"}},{"type":"collection_tile","settings":{"label":"Pokémon","brand_logo":"pokemon"}},{"type":"collection_tile","settings":{"label":"Formula 1","brand_logo":"f1"}},{"type":"collection_tile","settings":{"label":"Recently Added","brand_logo":"new_arrivals"}}]}]}
+{% endschema %}

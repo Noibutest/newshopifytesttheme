@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "demo_storefront": {
+      "type": "demo-storefront",
+      "settings": {}
+    }
+  },
+  "order": ["demo_storefront"]
+}

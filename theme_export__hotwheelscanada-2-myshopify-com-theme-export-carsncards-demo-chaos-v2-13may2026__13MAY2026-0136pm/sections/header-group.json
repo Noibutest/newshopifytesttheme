@@ -1,0 +1,69 @@
+{
+  "name": "t:sections.header.name",
+  "type": "header",
+  "sections": {
+    "announcement_bar_main": {
+      "type": "announcement-bar",
+      "blocks": {
+        "announcement_shipping": {
+          "type": "announcement",
+          "settings": {
+            "text": "🇨🇦 Free Economy Shipping on orders over $300 CAD to Canada 🇨🇦",
+            "link": ""
+          }
+        },
+        "announcement_sale": {
+          "type": "announcement",
+          "settings": {
+            "text": "WINTER PRICE FREEZE SALE — Save up to 30% on select in-stock items! Discounts applied at checkout.",
+            "link": ""
+          }
+        },
+        "announcement_tariff": {
+          "type": "announcement",
+          "settings": {
+            "text": "⚠️ US tariff issues may cause delays for pre-order items beyond estimated ETAs",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "announcement_shipping",
+        "announcement_sale",
+        "announcement_tariff"
+      ],
+      "settings": {
+        "auto_rotate": true,
+        "change_slides_speed": 5,
+        "color_scheme": "scheme-5",
+        "show_line_separator": true,
+        "show_social": false,
+        "enable_country_selector": false,
+        "enable_language_selector": false
+      }
+    },
+    "header": {
+      "type": "header",
+      "settings": {
+        "logo_position": "top-left",
+        "mobile_logo_position": "center",
+        "menu": "main-menu",
+        "menu_type_desktop": "dropdown",
+        "sticky_header_type": "on-scroll-up",
+        "show_line_separator": true,
+        "color_scheme": "background-2",
+        "menu_color_scheme": "",
+        "enable_country_selector": false,
+        "enable_language_selector": false,
+        "enable_customer_avatar": true,
+        "margin_bottom": 0,
+        "padding_top": 8,
+        "padding_bottom": 8
+      }
+    }
+  },
+  "order": [
+    "announcement_bar_main",
+    "header"
+  ]
+}
