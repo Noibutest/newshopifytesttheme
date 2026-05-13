@@ -1,0 +1,250 @@
+{%- comment -%}
+  DEMO STOREFRONT — fake products, working PDPs, broken add-to-cart.
+  For Noibu product demos. Self-contained. Renders inside the regular
+  Shopify theme layout so header/footer still work.
+{%- endcomment -%}
+
+<style>
+  .demo-store { max-width: 1200px; margin: 0 auto; padding: 32px 24px; color: #1a1a1a; }
+  .demo-store .ds-hero { padding: 16px 0 24px; }
+  .demo-store .ds-hero h1 { margin: 0 0 6px; font-size: 30px; }
+  .demo-store .ds-hero p { margin: 0; color: #6b7280; }
+  .demo-store .ds-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 18px; margin-top: 16px;
+  }
+  .demo-store .ds-card {
+    background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
+    overflow: hidden; cursor: pointer; transition: transform .15s, box-shadow .15s, border-color .15s;
+    display: flex; flex-direction: column;
+  }
+  .demo-store .ds-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.08); border-color: #d1d5db; }
+  .demo-store .ds-thumb {
+    aspect-ratio: 4 / 3;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 64px;
+    background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .demo-store .ds-body { padding: 14px 16px; }
+  .demo-store .ds-title { font-size: 14px; font-weight: 600; margin: 0 0 4px; line-height: 1.35; }
+  .demo-store .ds-meta { font-size: 12px; color: #6b7280; margin-bottom: 8px; }
+  .demo-store .ds-price { font-size: 16px; font-weight: 700; color: #111; }
+
+  .demo-store .ds-pdp { display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px; margin-top: 8px; }
+  .demo-store .ds-gallery {
+    aspect-ratio: 1; background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+    border: 1px solid #e5e7eb; border-radius: 16px;
+    display: flex; align-items: center; justify-content: center; font-size: 180px;
+  }
+  .demo-store .ds-info h2 { margin: 0 0 6px; font-size: 28px; }
+  .demo-store .ds-info .ds-sku { color: #6b7280; font-size: 13px; margin-bottom: 14px; }
+  .demo-store .ds-info .ds-price-lg { font-size: 28px; font-weight: 800; color: #111; margin-bottom: 14px; }
+  .demo-store .ds-info p { color: #374151; line-height: 1.6; }
+  .demo-store .ds-stock { font-size: 13px; color: #047857; margin-bottom: 16px; }
+
+  .demo-store .ds-qty-row { display: flex; align-items: center; gap: 12px; margin: 16px 0; }
+  .demo-store .ds-qty { display: inline-flex; border: 1px solid #d1d5db; border-radius: 8px; overflow: hidden; }
+  .demo-store .ds-qty button { background: #fff; color: #111; border: none; width: 34px; height: 38px; cursor: pointer; font-size: 16px; }
+  .demo-store .ds-qty input { width: 48px; height: 38px; background: #fff; color: #111; border: none; text-align: center; font-size: 15px; }
+
+  .demo-store .ds-atc {
+    background: #111; color: #fff; border: none; padding: 14px 22px;
+    font-size: 15px; font-weight: 700; border-radius: 10px; cursor: pointer; width: 100%;
+    transition: background .15s;
+  }
+  .demo-store .ds-atc:hover { background: #1f2937; }
+
+  .demo-store .ds-crumbs { font-size: 13px; color: #6b7280; margin-bottom: 14px; }
+  .demo-store .ds-crumbs a { color: inherit; }
+  .demo-store .ds-crumbs a:hover { color: #111; text-decoration: underline; }
+
+  .ds-modal-bg {
+    position: fixed; inset: 0; background: rgba(0,0,0,.55);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 9999; opacity: 0; pointer-events: none; transition: opacity .2s;
+  }
+  .ds-modal-bg.show { opacity: 1; pointer-events: auto; }
+  .ds-modal {
+    background: #fff5f5; border: 1px solid #fca5a5;
+    border-radius: 14px; padding: 24px; max-width: 520px; width: 92%;
+    box-shadow: 0 30px 80px rgba(0,0,0,.25);
+    transform: translateY(8px); transition: transform .2s;
+  }
+  .ds-modal-bg.show .ds-modal { transform: translateY(0); }
+  .ds-modal h3 { margin: 0 0 8px; color: #b91c1c; font-size: 18px; display: flex; align-items: center; gap: 10px; }
+  .ds-err-icon { width: 22px; height: 22px; border-radius: 50%; background: #dc2626; color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; }
+  .ds-modal .ds-msg { color: #7f1d1d; margin: 10px 0 14px; font-size: 14px; line-height: 1.5; }
+  .ds-modal pre {
+    background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px;
+    padding: 12px; color: #991b1b; font-size: 12px; overflow-x: auto; margin: 0 0 16px;
+  }
+  .ds-modal .ds-actions { display: flex; gap: 10px; justify-content: flex-end; }
+  .ds-modal button {
+    border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600;
+  }
+  .ds-modal .ds-btn-secondary { background: #fee2e2; color: #991b1b; }
+  .ds-modal .ds-btn-primary { background: #dc2626; color: #fff; }
+
+  @media (max-width: 720px) {
+    .demo-store .ds-pdp { grid-template-columns: 1fr; }
+  }
+</style>
+
+<div class="demo-store">
+  <div id="ds-app"></div>
+</div>
+
+<div class="ds-modal-bg" id="ds-err-modal">
+  <div class="ds-modal">
+    <h3><span class="ds-err-icon">!</span> Something went wrong</h3>
+    <div class="ds-msg" id="ds-err-msg">We couldn't add this item to your cart. Please try again or contact support.</div>
+    <pre id="ds-err-trace"></pre>
+    <div class="ds-actions">
+      <button class="ds-btn-secondary" onclick="dsCloseErr()">Dismiss</button>
+      <button class="ds-btn-primary" onclick="dsCloseErr()">Try again</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  // --- Fake catalog ---------------------------------------------
+  var PRODUCTS = [
+    { id: 'cnc-001', sku: 'DC-SHE-67',  name: '1967 Shelby GT500',                       sub: '1:18 Diecast • Acme Trading Co.',    price: 89.99,  emoji: '🏎️', stock: 7,
+      desc: 'A meticulously detailed 1:18 scale recreation of the legendary 1967 Shelby GT500. Opening hood reveals the 428 Cobra Jet engine; functional steering and detailed interior.' },
+    { id: 'cnc-002', sku: 'DC-CAM-69',  name: '1969 Chevy Camaro Z/28',                  sub: '1:24 Diecast • Maisto',              price: 54.99,  emoji: '🚗', stock: 12,
+      desc: 'Hugger Orange with black stripes. 1:24 scale with rubber tires, detailed undercarriage, and rolling wheels. Limited production run of 2,500 units.' },
+    { id: 'cnc-003', sku: 'TC-TOP-24',  name: '2024 Topps Chrome Hobby Box',             sub: 'Baseball • 24 packs per box',        price: 179.99, emoji: '⚾', stock: 4,
+      desc: 'Sealed hobby box. 24 packs, 4 cards per pack. Look for autograph and refractor parallels, plus Rookie Class debuts. One auto on average per box.' },
+    { id: 'cnc-004', sku: 'DC-BEL-57',  name: '1957 Chevy Bel Air',                      sub: '1:18 Diecast • Sunstar',             price: 74.99,  emoji: '🚙', stock: 9,
+      desc: 'Two-tone Sierra Gold and Adobe Beige. Functional doors, hood, and trunk. Highly detailed interior with chrome accents throughout.' },
+    { id: 'cnc-005', sku: 'TC-PAN-24',  name: 'Panini Prizm Football Mega',              sub: 'NFL • 80 cards per box',             price: 89.99,  emoji: '🏈', stock: 18,
+      desc: 'Mega box format. Look for exclusive Pink Pulsar Prizm parallels only available in Megas. 10 inserts per box on average.' },
+    { id: 'cnc-006', sku: 'DC-CUD-70',  name: "1970 Plymouth Hemi 'Cuda",                sub: '1:18 Diecast • GMP',                 price: 94.99,  emoji: '🚘', stock: 3,
+      desc: 'Plum Crazy purple with shaker hood. Numbered limited edition with certificate. Working suspension and steering. A grail piece for any muscle-car collector.' },
+    { id: 'cnc-007', sku: 'TC-PKM-SV',  name: 'Pokemon TCG: Scarlet & Violet Booster Box', sub: '36 packs • 10 cards per pack',     price: 129.99, emoji: '🎴', stock: 6,
+      desc: 'Sealed 36-pack booster box. Features new Pokemon ex cards and Tera Crystal effects. Pull rates approximately 1 ultra-rare per 4 packs.' },
+    { id: 'cnc-008', sku: 'DC-MUS-65',  name: '1965 Ford Mustang Fastback',              sub: '1:24 Diecast • Welly',               price: 42.99,  emoji: '🏁', stock: 22,
+      desc: 'Wimbledon White with red interior. Pony wheel covers and full chrome trim. Opening doors and hood, detailed 289 V8.' },
+    { id: 'cnc-009', sku: 'TC-TOP-23U', name: '2023 Topps Update Jumbo Box',             sub: 'Baseball • 10 jumbo packs',          price: 239.99, emoji: '⚾', stock: 2,
+      desc: 'Jumbo box format with 46 cards per pack. Look for rookie debut cards, All-Star variations, and 1-of-1 plates. Two autos per box on average.' },
+    { id: 'cnc-010', sku: 'DC-240Z-72', name: '1972 Datsun 240Z',                        sub: '1:18 Diecast • Kyosho',              price: 79.99,  emoji: '🚖', stock: 11,
+      desc: 'Series 1 in classic Safari Gold. Detachable hood with full L24 engine reproduction. Functional steering, opening doors and hatch.' }
+  ];
+
+  function $(id) { return document.getElementById(id); }
+  function money(n) { return '$' + n.toFixed(2); }
+
+  function gridHtml() {
+    var cards = PRODUCTS.map(function (p) {
+      return '<div class="ds-card" data-id="' + p.id + '">' +
+               '<div class="ds-thumb">' + p.emoji + '</div>' +
+               '<div class="ds-body">' +
+                 '<div class="ds-title">' + p.name + '</div>' +
+                 '<div class="ds-meta">' + p.sub + '</div>' +
+                 '<div class="ds-price">' + money(p.price) + '</div>' +
+               '</div>' +
+             '</div>';
+    }).join('');
+    return '<section class="ds-hero">' +
+             '<h1>New Arrivals</h1>' +
+             '<p>Diecast classics and sealed trading-card product, hand-picked weekly.</p>' +
+           '</section>' +
+           '<div class="ds-grid">' + cards + '</div>';
+  }
+
+  function pdpHtml(p) {
+    return '<div class="ds-crumbs"><a href="#/">Shop</a> / <span>' + p.name + '</span></div>' +
+           '<div class="ds-pdp">' +
+             '<div class="ds-gallery">' + p.emoji + '</div>' +
+             '<div class="ds-info">' +
+               '<h2>' + p.name + '</h2>' +
+               '<div class="ds-sku">SKU: ' + p.sku + '</div>' +
+               '<div class="ds-price-lg">' + money(p.price) + '</div>' +
+               '<div class="ds-stock">● In stock — ' + p.stock + ' available</div>' +
+               '<p>' + p.desc + '</p>' +
+               '<div class="ds-qty-row">' +
+                 '<span style="font-size:13px;color:#6b7280">Quantity</span>' +
+                 '<div class="ds-qty">' +
+                   '<button data-qty="-1">−</button>' +
+                   '<input id="ds-qty" type="text" value="1" />' +
+                   '<button data-qty="1">+</button>' +
+                 '</div>' +
+               '</div>' +
+               '<button class="ds-atc" data-add="' + p.id + '">Add to Cart</button>' +
+             '</div>' +
+           '</div>';
+  }
+
+  function render() {
+    var hash = location.hash || '#/';
+    var app = $('ds-app');
+    if (!app) return;
+    if (hash.indexOf('#/product/') === 0) {
+      var id = hash.slice('#/product/'.length);
+      var p = PRODUCTS.filter(function (x) { return x.id === id; })[0];
+      app.innerHTML = p ? pdpHtml(p) : '<p>Product not found.</p>';
+    } else {
+      app.innerHTML = gridHtml();
+    }
+    window.scrollTo(0, 0);
+  }
+
+  // Delegate clicks
+  document.addEventListener('click', function (evt) {
+    var t = evt.target;
+    if (!t || !t.closest) return;
+    var card = t.closest('.ds-card');
+    if (card) {
+      location.hash = '#/product/' + card.getAttribute('data-id');
+      return;
+    }
+    var qBtn = t.closest('[data-qty]');
+    if (qBtn) {
+      var delta = parseInt(qBtn.getAttribute('data-qty'), 10);
+      var input = $('ds-qty');
+      var v = parseInt(input.value || '1', 10);
+      v = Math.max(1, Math.min(99, v + delta));
+      input.value = v;
+      return;
+    }
+    var atc = t.closest('[data-add]');
+    if (atc) { addToCart(atc.getAttribute('data-add')); return; }
+  });
+
+  function addToCart(productId) {
+    console.log('[demo-store] add requested', { productId: productId });
+    try {
+      // cartBridge is intentionally undefined — Noibu will see this.
+      cartBridge.commit({ productId: productId, qty: parseInt(($('ds-qty') || {}).value || 1, 10) });
+    } catch (err) {
+      console.error('[demo-store] add-to-cart failed:', err);
+      $('ds-err-msg').textContent = "We couldn't add this item to your cart. Our team has been notified.";
+      $('ds-err-trace').textContent =
+        err.name + ': ' + err.message +
+        '\n  at addToCart (demo-storefront.liquid:line ~210)' +
+        '\n  at HTMLButtonElement.onclick';
+      $('ds-err-modal').classList.add('show');
+      // re-throw async so window.onerror catches it (Noibu hooks here)
+      setTimeout(function () { throw err; }, 0);
+    }
+  }
+
+  window.dsCloseErr = function () { $('ds-err-modal').classList.remove('show'); };
+
+  window.addEventListener('hashchange', render);
+  render();
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Demo Storefront",
+  "settings": [],
+  "presets": [
+    { "name": "Demo Storefront" }
+  ]
+}
+{% endschema %}
