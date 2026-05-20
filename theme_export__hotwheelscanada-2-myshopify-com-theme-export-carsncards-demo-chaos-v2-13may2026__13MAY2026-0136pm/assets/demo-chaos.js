@@ -73,11 +73,12 @@
   // 6. PERIODIC RECURRING ERROR (every 4s, different shape)
   // ============================================================
   var chaosTick = 0;
+  var cartSyncQueue = []; // fix: declare before use to prevent ReferenceError (Noibu Issue #1)
   setInterval(function () {
     chaosTick++;
     try {
       if (chaosTick % 4 === 0) {
-        // ReferenceError
+        // ReferenceError — now resolved
         cartSyncQueue.push({ id: chaosTick });
       } else if (chaosTick % 4 === 1) {
         // TypeError
