@@ -24,6 +24,19 @@
       endif
     -%}
 
+    {%- comment -%} Low-stock scarcity signal {%- endcomment -%}
+    {%- assign current_variant = product.selected_or_first_available_variant -%}
+    {%- if current_variant.available
+      and current_variant.inventory_management == 'shopify'
+      and current_variant.inventory_policy == 'deny'
+      and current_variant.inventory_quantity > 0
+      and current_variant.inventory_quantity <= 10
+    -%}
+      <p class="product__low-stock-notice" aria-live="polite" style="margin: 0 0 0.75rem; font-size: 0.875em; color: #c0392b; font-weight: 600;">
+        {{- 'products.product.inventory.low_stock_with_count' | t: count: current_variant.inventory_quantity -}}
+      </p>
+    {%- endif -%}
+
     <product-form
       class="product-form"
       data-hide-errors="{{ gift_card_recipient_feature_active }}"
