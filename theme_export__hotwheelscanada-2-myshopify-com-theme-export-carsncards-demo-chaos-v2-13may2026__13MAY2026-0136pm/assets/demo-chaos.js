@@ -71,13 +71,12 @@
         cartSyncQueue.push({ id: chaosTick });
       } else if (chaosTick % 4 === 1) {
         // fix: initialize u as an array before setting .length (Noibu Issue #4)
-        // Previously `var u;` left u as undefined, causing:
-        // TypeError: Cannot set properties of undefined (setting 'length')
         var u = [];
         u.length = 5;
       } else if (chaosTick % 4 === 2) {
-        // RangeError
-        var arr = new Array(-1);
+        // fix: use valid non-negative length to prevent RangeError (Noibu Issue #3)
+        // Previously `new Array(-1)` threw: RangeError: Invalid array length
+        var arr = new Array(1);
       } else {
         // SyntaxError via JSON
         JSON.parse('{not valid json' + chaosTick);
