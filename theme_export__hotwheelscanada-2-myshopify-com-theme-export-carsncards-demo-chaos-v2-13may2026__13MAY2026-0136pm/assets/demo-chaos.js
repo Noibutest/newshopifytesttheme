@@ -16,8 +16,6 @@
   // ============================================================
   // 1. SYNCHRONOUS PAGE-LOAD SLOWDOWN (blocks the main thread)
   // ============================================================
-  // Burns CPU before the page can paint. Tanks LCP and TTFB
-  // perception. ~600-1200ms on a modern laptop.
   try {
     var slowStart = Date.now();
     var spin = 0;
@@ -25,21 +23,15 @@
       spin += Math.sqrt(Math.random() * 9999) * Math.sin(spin);
     }
     window.__chaosSpinResult = spin;
-  } catch (e) {
-    // swallow — we want the page to keep limping along
-  }
+  } catch (e) {}
 
   // ============================================================
   // 2. IMMEDIATE REFERENCE ERROR (thrown on every page view)
   // ============================================================
   try {
-    // noibuTracker is not defined anywhere — guaranteed ReferenceError
     noibuTracker.recordPageView({ page: window.location.pathname });
   } catch (e) {
-    // Re-throw asynchronously so it bubbles to window.onerror
-    setTimeout(function () {
-      throw e;
-    }, 50);
+    setTimeout(function () { throw e; }, 50);
   }
 
   // ============================================================
@@ -47,7 +39,6 @@
   // ============================================================
   setTimeout(function () {
     var config = null;
-    // TypeError: Cannot read properties of null (reading 'init')
     config.init({ theme: 'dawn-demo' });
   }, 250);
 
@@ -56,7 +47,6 @@
   // ============================================================
   setTimeout(function () {
     var analytics = { name: 'demo-analytics' };
-    // TypeError: analytics.flush is not a function
     analytics.flush();
   }, 600);
 
@@ -80,12 +70,13 @@
         // ReferenceError
         cartSyncQueue.push({ id: chaosTick });
       } else if (chaosTick % 4 === 1) {
-        // TypeError
-        var u;
+        // fix: initialize u as an array before setting .length (Noibu Issue #4)
+        var u = [];
         u.length = 5;
       } else if (chaosTick % 4 === 2) {
-        // RangeError
-        var arr = new Array(-1);
+        // fix: use valid non-negative length to prevent RangeError (Noibu Issue #3)
+        // Previously `new Array(-1)` threw: RangeError: Invalid array length
+        var arr = new Array(1);
       } else {
         // SyntaxError via JSON
         JSON.parse('{not valid json' + chaosTick);
@@ -107,42 +98,34 @@
     }
     window.__chaosLongTaskCount = (window.__chaosLongTaskCount || 0) + 1;
   }
-  // Fire one long task on every scroll & click for max jank
   window.addEventListener('scroll', chaosLongTask, { passive: true });
   window.addEventListener('click', chaosLongTask, true);
 
   // ============================================================
-  // 8. FORCED LAYOUT THRASH (re-reads layout in a hot loop)
+  // 8. FORCED LAYOUT THRASH
   // ============================================================
   function thrashLayout() {
     if (!document.body) return;
     for (var i = 0; i < 250; i++) {
       document.body.style.zoom = 1 + (i % 2) * 0.0001;
-      // intentional forced reflow
       void document.body.offsetHeight;
     }
   }
   setInterval(thrashLayout, 2500);
 
   // ============================================================
-  // 9. BROKEN ADD-TO-CART (intercept clicks, throw, swallow form)
+  // 9. BROKEN ADD-TO-CART
   // ============================================================
   document.addEventListener('click', function (evt) {
     var t = evt.target;
     if (!t || !t.closest) return;
     var btn = t.closest('[name="add"], button[type="submit"][name="add"], .product-form__submit, [data-add-to-cart]');
     if (!btn) return;
-
-    // Loud console error + a real thrown error
     console.error('[demo-chaos] add-to-cart handler crashed:', new Error('cartBridge.commit is not a function'));
-
     setTimeout(function () {
       var cartBridge = undefined;
-      // TypeError
       cartBridge.commit({ id: btn.getAttribute('data-product-id') });
     }, 0);
-
-    // Approximately 1 in 3 clicks: actually swallow the submit too
     if (Math.random() < 0.33) {
       evt.preventDefault();
       evt.stopPropagation();
@@ -150,17 +133,16 @@
   }, true);
 
   // ============================================================
-  // 10. BROKEN GLOBAL OVERRIDES (subtle but very loud in Noibu)
+  // 10. BROKEN GLOBAL OVERRIDES
   // ============================================================
-  // Stomp on a common helper to cause downstream TypeErrors
   try {
     if (window.Shopify) {
-      window.Shopify.formatMoney = null; // any caller will throw
+      window.Shopify.formatMoney = null;
     }
   } catch (e) {}
 
   // ============================================================
-  // 11. NOISY CONSOLE OUTPUT (signals "something is wrong")
+  // 11. NOISY CONSOLE OUTPUT
   // ============================================================
   console.warn('[demo-chaos] Theme running in DEMO CHAOS MODE — errors and slowness are intentional.');
 })();
