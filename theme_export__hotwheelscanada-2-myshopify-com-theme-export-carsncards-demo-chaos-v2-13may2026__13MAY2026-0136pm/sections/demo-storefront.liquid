@@ -6,13 +6,17 @@
 
 <style>
   .demo-store { max-width: 1200px; margin: 0 auto; padding: 32px 24px; color: #1a1a1a; }
-  .demo-store .ds-hero { padding: 16px 0 24px; }
+  /* Sally Demo 2026-05-20: scrollmap shows 32% of visitors stop at the fold (~45% of 1901px).
+     Reducing hero padding from 16px 0 24px to 8px 0 12px lifts the second product row above
+     the 900px viewport fold so more of the catalog is visible without scrolling. */
+  .demo-store .ds-hero { padding: 8px 0 12px; }
   .demo-store .ds-hero h1 { margin: 0 0 6px; font-size: 30px; }
   .demo-store .ds-hero p { margin: 0; color: #6b7280; }
   .demo-store .ds-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 18px; margin-top: 16px;
+    /* Sally Demo 2026-05-20: reduced margin-top from 16px to 8px to pull grid higher */
+    gap: 18px; margin-top: 8px;
   }
   .demo-store .ds-card {
     background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
@@ -124,7 +128,7 @@
       desc: 'Mega box format. Look for exclusive Pink Pulsar Prizm parallels only available in Megas. 10 inserts per box on average.' },
     { id: 'cnc-006', sku: 'DC-CUD-70',  name: "1970 Plymouth Hemi 'Cuda",                sub: '1:18 Diecast • GMP',                 price: 94.99,  emoji: '🚘', stock: 3,
       desc: 'Plum Crazy purple with shaker hood. Numbered limited edition with certificate. Working suspension and steering. A grail piece for any muscle-car collector.' },
-    { id: 'cnc-007', sku: 'TC-PKM-SV',  name: 'Pokemon TCG: Scarlet & Violet Booster Box', sub: '36 packs • 10 cards per pack',     price: 129.99, emoji: '🎴', stock: 6,
+    { id: 'cnc-007', sku: 'TC-PKM-SV',  name: 'Pokemon TCG: Scarlet & Violet Booster Box', sub: '36 packs • 10 cards per pack',     price: 129.99, emoji: '🂴', stock: 6,
       desc: 'Sealed 36-pack booster box. Features new Pokemon ex cards and Tera Crystal effects. Pull rates approximately 1 ultra-rare per 4 packs.' },
     { id: 'cnc-008', sku: 'DC-MUS-65',  name: '1965 Ford Mustang Fastback',              sub: '1:24 Diecast • Welly',               price: 42.99,  emoji: '🏁', stock: 22,
       desc: 'Wimbledon White with red interior. Pony wheel covers and full chrome trim. Opening doors and hood, detailed 289 V8.' },
