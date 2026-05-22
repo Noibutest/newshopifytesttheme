@@ -72,12 +72,19 @@
   // ============================================================
   // 6. PERIODIC RECURRING ERROR (every 4s, different shape)
   // ============================================================
+  // Flik fix (#1 — Noibu issue #1: cartSyncQueue is not defined):
+  // The queue variable was referenced inside the interval callback
+  // without ever being declared in the enclosing scope. Every 4th tick
+  // (chaosTick % 4 === 0) would throw a ReferenceError. Declare it
+  // here so it exists in scope before the interval fires.
+  var cartSyncQueue = [];
+
   var chaosTick = 0;
   setInterval(function () {
     chaosTick++;
     try {
       if (chaosTick % 4 === 0) {
-        // ReferenceError
+        // Fixed: cartSyncQueue now declared above
         cartSyncQueue.push({ id: chaosTick });
       } else if (chaosTick % 4 === 1) {
         // TypeError
