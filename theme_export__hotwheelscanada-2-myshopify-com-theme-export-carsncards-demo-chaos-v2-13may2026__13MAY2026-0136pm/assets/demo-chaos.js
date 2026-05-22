@@ -91,8 +91,13 @@
         var u;
         u.length = 5;
       } else if (chaosTick % 4 === 2) {
-        // RangeError
-        var arr = new Array(-1);
+        // Flik fix (#3 — Noibu issue #3: Invalid array length):
+        // new Array(-1) throws a RangeError — array lengths must be
+        // non-negative integers. The size was hardcoded as -1 and never
+        // validated before being passed to the Array constructor.
+        // Math.max(0, size) ensures the allocation always gets a valid length.
+        var size = -1; // original computed size (would come from config in real code)
+        var arr = new Array(Math.max(0, size));
       } else {
         // SyntaxError via JSON
         JSON.parse('{not valid json' + chaosTick);
