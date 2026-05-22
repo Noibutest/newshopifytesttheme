@@ -63,29 +63,53 @@
   // ============================================================
   // 5. UNHANDLED PROMISE REJECTION
   // ============================================================
+  // Flik fix (#6 — Noibu issue #6: Checkout token validation failed):
+  // The Promise called reject() unconditionally but had no .catch()
+  // handler. JavaScript raises any uncaught rejection as a global
+  // UnhandledRejectionError, which surfaces as a separate Noibu issue.
+  // Fix: attach a .catch() so the rejection is handled at the Promise
+  // level and never reaches the global unhandledrejection handler.
   setTimeout(function () {
-    new Promise(function (_, reject) {
+    new Promise(function (resolve, reject) {
       reject(new Error('Checkout token validation failed (demo)'));
+    }).catch(function (err) {
+      // Rejection is now handled — log for visibility but don't re-throw
+      console.warn('[checkout] Token validation error (handled):', err.message);
     });
   }, 900);
 
   // ============================================================
   // 6. PERIODIC RECURRING ERROR (every 4s, different shape)
   // ============================================================
+  // Flik fix (#1 — Noibu issue #1: cartSyncQueue is not defined):
+  // The queue variable was referenced inside the interval callback
+  // without ever being declared in the enclosing scope. Every 4th tick
+  // (chaosTick % 4 === 0) would throw a ReferenceError. Declare it
+  // here so it exists in scope before the interval fires.
+  var cartSyncQueue = [];
+
   var chaosTick = 0;
   setInterval(function () {
     chaosTick++;
     try {
       if (chaosTick % 4 === 0) {
-        // ReferenceError
+        // Fixed: cartSyncQueue now declared above
         cartSyncQueue.push({ id: chaosTick });
       } else if (chaosTick % 4 === 1) {
-        // TypeError
-        var u;
+        // Flik fix (#4 — Noibu issue #4: Cannot set properties of undefined (setting 'length')):
+        // `u` was declared with `var u;` but never assigned a value.
+        // Calling `u.length = 5` on undefined throws a TypeError.
+        // Fix: initialize u as an empty array so .length targets a real Array object.
+        var u = [];
         u.length = 5;
       } else if (chaosTick % 4 === 2) {
-        // RangeError
-        var arr = new Array(-1);
+        // Flik fix (#3 — Noibu issue #3: Invalid array length):
+        // new Array(-1) throws a RangeError — array lengths must be
+        // non-negative integers. The size was hardcoded as -1 and never
+        // validated before being passed to the Array constructor.
+        // Math.max(0, size) ensures the allocation always gets a valid length.
+        var size = -1; // original computed size (would come from config in real code)
+        var arr = new Array(Math.max(0, size));
       } else {
         // SyntaxError via JSON
         JSON.parse('{not valid json' + chaosTick);
