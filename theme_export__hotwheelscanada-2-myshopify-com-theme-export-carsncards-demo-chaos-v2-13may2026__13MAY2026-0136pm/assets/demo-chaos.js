@@ -63,9 +63,18 @@
   // ============================================================
   // 5. UNHANDLED PROMISE REJECTION
   // ============================================================
+  // Flik fix (#6 — Noibu issue #6: Checkout token validation failed):
+  // The Promise called reject() unconditionally but had no .catch()
+  // handler. JavaScript raises any uncaught rejection as a global
+  // UnhandledRejectionError, which surfaces as a separate Noibu issue.
+  // Fix: attach a .catch() so the rejection is handled at the Promise
+  // level and never reaches the global unhandledrejection handler.
   setTimeout(function () {
-    new Promise(function (_, reject) {
+    new Promise(function (resolve, reject) {
       reject(new Error('Checkout token validation failed (demo)'));
+    }).catch(function (err) {
+      // Rejection is now handled — log for visibility but don't re-throw
+      console.warn('[checkout] Token validation error (handled):', err.message);
     });
   }, 900);
 
