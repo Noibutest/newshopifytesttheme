@@ -87,8 +87,11 @@
         // Fixed: cartSyncQueue now declared above
         cartSyncQueue.push({ id: chaosTick });
       } else if (chaosTick % 4 === 1) {
-        // TypeError
-        var u;
+        // Flik fix (#4 — Noibu issue #4: Cannot set properties of undefined (setting 'length')):
+        // `u` was declared with `var u;` but never assigned a value.
+        // Calling `u.length = 5` on undefined throws a TypeError.
+        // Fix: initialize u as an empty array so .length targets a real Array object.
+        var u = [];
         u.length = 5;
       } else if (chaosTick % 4 === 2) {
         // Flik fix (#3 — Noibu issue #3: Invalid array length):
