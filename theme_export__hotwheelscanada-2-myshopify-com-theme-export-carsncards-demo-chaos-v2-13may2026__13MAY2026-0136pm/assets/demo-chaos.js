@@ -72,20 +72,26 @@
   // ============================================================
   // 6. PERIODIC RECURRING ERROR (every 4s, different shape)
   // ============================================================
+  // FIX (Noibu #1): cartSyncQueue was referenced inside the interval
+  // without ever being declared, causing a ReferenceError on every
+  // 4th tick. Declaring it here as an empty array so push() has a
+  // valid target and the interval can complete its tick cycle.
+  var cartSyncQueue = [];
   var chaosTick = 0;
   setInterval(function () {
     chaosTick++;
     try {
       if (chaosTick % 4 === 0) {
-        // ReferenceError
         cartSyncQueue.push({ id: chaosTick });
       } else if (chaosTick % 4 === 1) {
         // TypeError
         var u;
         u.length = 5;
       } else if (chaosTick % 4 === 2) {
-        // RangeError
-        var arr = new Array(-1);
+        // FIX (Noibu #3): new Array(-1) throws a RangeError because
+        // JavaScript requires array length to be a non-negative integer.
+        // Replaced with an empty array literal [] — same intent, always valid.
+        var arr = [];
       } else {
         // SyntaxError via JSON
         JSON.parse('{not valid json' + chaosTick);
