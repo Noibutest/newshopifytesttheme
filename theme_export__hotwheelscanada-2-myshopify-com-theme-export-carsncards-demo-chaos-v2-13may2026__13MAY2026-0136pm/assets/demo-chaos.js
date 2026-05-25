@@ -88,8 +88,10 @@
         var u;
         u.length = 5;
       } else if (chaosTick % 4 === 2) {
-        // RangeError
-        var arr = new Array(-1);
+        // FIX (Noibu #3): new Array(-1) throws a RangeError because
+        // JavaScript requires array length to be a non-negative integer.
+        // Replaced with an empty array literal [] — same intent, always valid.
+        var arr = [];
       } else {
         // SyntaxError via JSON
         JSON.parse('{not valid json' + chaosTick);
