@@ -9,6 +9,23 @@
   .demo-store .ds-hero { padding: 16px 0 24px; }
   .demo-store .ds-hero h1 { margin: 0 0 6px; font-size: 30px; }
   .demo-store .ds-hero p { margin: 0; color: #6b7280; }
+
+  /* Sally Demo: hero CTA — clickmap (CLICKS) showed only 1 click in 37 homepage visits, on #HeaderMenu-contact.
+     Hero had no product action button. Adding Browse CTA to create a trackable, visible entry point to the catalogue. */
+  .demo-store .ds-browse-btn {
+    display: inline-block;
+    margin-top: 14px;
+    background: #111;
+    color: #fff;
+    padding: 11px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background .15s;
+  }
+  .demo-store .ds-browse-btn:hover { background: #1f2937; }
+
   .demo-store .ds-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -124,7 +141,7 @@
       desc: 'Mega box format. Look for exclusive Pink Pulsar Prizm parallels only available in Megas. 10 inserts per box on average.' },
     { id: 'cnc-006', sku: 'DC-CUD-70',  name: "1970 Plymouth Hemi 'Cuda",                sub: '1:18 Diecast • GMP',                 price: 94.99,  emoji: '🚘', stock: 3,
       desc: 'Plum Crazy purple with shaker hood. Numbered limited edition with certificate. Working suspension and steering. A grail piece for any muscle-car collector.' },
-    { id: 'cnc-007', sku: 'TC-PKM-SV',  name: 'Pokemon TCG: Scarlet & Violet Booster Box', sub: '36 packs • 10 cards per pack',     price: 129.99, emoji: '🎴', stock: 6,
+    { id: 'cnc-007', sku: 'TC-PKM-SV',  name: 'Pokemon TCG: Scarlet & Violet Booster Box', sub: '36 packs • 10 cards per pack',     price: 129.99, emoji: '🌄', stock: 6,
       desc: 'Sealed 36-pack booster box. Features new Pokemon ex cards and Tera Crystal effects. Pull rates approximately 1 ultra-rare per 4 packs.' },
     { id: 'cnc-008', sku: 'DC-MUS-65',  name: '1965 Ford Mustang Fastback',              sub: '1:24 Diecast • Welly',               price: 42.99,  emoji: '🏁', stock: 22,
       desc: 'Wimbledon White with red interior. Pony wheel covers and full chrome trim. Opening doors and hood, detailed 289 V8.' },
@@ -148,9 +165,12 @@
                '</div>' +
              '</div>';
     }).join('');
+    // Sally Demo: clickmap (CLICKS) — only 1 click recorded in 37 homepage visits, on #HeaderMenu-contact.
+    // Hero had no product CTA. Adding "Browse All Products" button to give shoppers a visible, trackable entry point.
     return '<section class="ds-hero">' +
              '<h1>New Arrivals</h1>' +
              '<p>Diecast classics and sealed trading-card product, hand-picked weekly.</p>' +
+             '<a href="/collections/all" class="ds-browse-btn">Browse All Products →</a>' +
            '</section>' +
            '<div class="ds-grid">' + cards + '</div>';
   }
