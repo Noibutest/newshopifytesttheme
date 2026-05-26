@@ -77,8 +77,11 @@
     chaosTick++;
     try {
       if (chaosTick % 4 === 0) {
-        // ReferenceError
-        cartSyncQueue.push({ id: chaosTick });
+        // Root cause fix (Noibu #1): cartSyncQueue was never declared,
+        // so every 4th tick raised a ReferenceError. Initialize lazily
+        // on window so concurrent code shares the same queue instance.
+        window.cartSyncQueue = window.cartSyncQueue || [];
+        window.cartSyncQueue.push({ id: chaosTick });
       } else if (chaosTick % 4 === 1) {
         // TypeError
         var u;
