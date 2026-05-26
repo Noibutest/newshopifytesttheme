@@ -21,7 +21,7 @@
         {{ section.settings.heading }}
       </h2>
     {%- else -%}
-      <h2 class="visually-hidden">{{ 'templates.contact.form.title' | t }}</h2>
+      <p class="visually-hidden">{{ 'templates.contact.form.title' | t }}</p>
     {%- endif -%}
     {%- liquid
       assign contact_form_class = 'isolate'
