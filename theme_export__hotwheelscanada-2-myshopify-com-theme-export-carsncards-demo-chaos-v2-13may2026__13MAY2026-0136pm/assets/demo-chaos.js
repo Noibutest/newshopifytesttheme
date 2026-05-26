@@ -77,15 +77,21 @@
     chaosTick++;
     try {
       if (chaosTick % 4 === 0) {
-        // ReferenceError
-        cartSyncQueue.push({ id: chaosTick });
+        // Root cause fix (Noibu #1): cartSyncQueue was never declared,
+        // so every 4th tick raised a ReferenceError. Initialize lazily
+        // on window so concurrent code shares the same queue instance.
+        window.cartSyncQueue = window.cartSyncQueue || [];
+        window.cartSyncQueue.push({ id: chaosTick });
       } else if (chaosTick % 4 === 1) {
         // TypeError
         var u;
         u.length = 5;
       } else if (chaosTick % 4 === 2) {
-        // RangeError
-        var arr = new Array(-1);
+        // Root cause fix (Noibu #3): Array(n) requires n to be a
+        // non-negative integer; the literal -1 always threw RangeError.
+        // The buffer is only used to hold queued ticks and grows via
+        // push(), so an empty array literal is the correct value.
+        var arr = [];
       } else {
         // SyntaxError via JSON
         JSON.parse('{not valid json' + chaosTick);
