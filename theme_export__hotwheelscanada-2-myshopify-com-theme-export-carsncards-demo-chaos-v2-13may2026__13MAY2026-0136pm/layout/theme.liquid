@@ -34,8 +34,8 @@
 
     {% render 'meta-tags' %}
 
-    {%- comment -%} DEMO CHAOS: render-blocking on purpose. Remove before production. {%- endcomment -%}
-    <script src="{{ 'demo-slow-loader.js' | asset_url }}"></script>
+    {%- comment -%} FLASH perf fix 2026-05-26: added defer="defer" to demo-slow-loader.js — was render-blocking in <head>, halting HTML parsing and delaying FCP on every page {%- endcomment -%}
+    <script src="{{ 'demo-slow-loader.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'demo-chaos.js' | asset_url }}" defer="defer"></script>
 
     <script src="{{ 'constants.js' | asset_url }}" defer="defer"></script>
