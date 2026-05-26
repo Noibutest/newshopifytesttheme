@@ -9,6 +9,29 @@
   .demo-store .ds-hero { padding: 16px 0 24px; }
   .demo-store .ds-hero h1 { margin: 0 0 6px; font-size: 30px; }
   .demo-store .ds-hero p { margin: 0; color: #6b7280; }
+
+  /* Sally Demo: scroll cue — scrollmap showed p25 depth = 46% (≈855px of 1901px page).
+     75% of users stop at the fold, leaving lower products invisible. Animated pill nudges them to scroll. */
+  .demo-store .ds-scroll-cue {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 14px;
+    color: #6b7280;
+    font-size: 13px;
+    text-decoration: none;
+    border: 1px solid #e5e7eb;
+    padding: 7px 14px;
+    border-radius: 20px;
+    transition: border-color .15s, color .15s;
+    animation: ds-bounce 1.8s ease-in-out infinite;
+  }
+  .demo-store .ds-scroll-cue:hover { color: #111; border-color: #9ca3af; animation: none; }
+  @keyframes ds-bounce {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(3px); }
+  }
+
   .demo-store .ds-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -124,7 +147,7 @@
       desc: 'Mega box format. Look for exclusive Pink Pulsar Prizm parallels only available in Megas. 10 inserts per box on average.' },
     { id: 'cnc-006', sku: 'DC-CUD-70',  name: "1970 Plymouth Hemi 'Cuda",                sub: '1:18 Diecast • GMP',                 price: 94.99,  emoji: '🚘', stock: 3,
       desc: 'Plum Crazy purple with shaker hood. Numbered limited edition with certificate. Working suspension and steering. A grail piece for any muscle-car collector.' },
-    { id: 'cnc-007', sku: 'TC-PKM-SV',  name: 'Pokemon TCG: Scarlet & Violet Booster Box', sub: '36 packs • 10 cards per pack',     price: 129.99, emoji: '🎴', stock: 6,
+    { id: 'cnc-007', sku: 'TC-PKM-SV',  name: 'Pokemon TCG: Scarlet & Violet Booster Box', sub: '36 packs • 10 cards per pack',     price: 129.99, emoji: '🌄', stock: 6,
       desc: 'Sealed 36-pack booster box. Features new Pokemon ex cards and Tera Crystal effects. Pull rates approximately 1 ultra-rare per 4 packs.' },
     { id: 'cnc-008', sku: 'DC-MUS-65',  name: '1965 Ford Mustang Fastback',              sub: '1:24 Diecast • Welly',               price: 42.99,  emoji: '🏁', stock: 22,
       desc: 'Wimbledon White with red interior. Pony wheel covers and full chrome trim. Opening doors and hood, detailed 289 V8.' },
@@ -148,11 +171,15 @@
                '</div>' +
              '</div>';
     }).join('');
+    // Sally Demo: scrollmap — p25 scroll depth = 46% of 1901px page (≈855px, right at viewport edge).
+    // 75% of users don't scroll past the fold. Animated scroll-cue signals that 10 products await below.
+    // id="ds-products" added to grid so the anchor lands correctly.
     return '<section class="ds-hero">' +
              '<h1>New Arrivals</h1>' +
              '<p>Diecast classics and sealed trading-card product, hand-picked weekly.</p>' +
+             '<a href="#ds-products" class="ds-scroll-cue">↓ 10 products below</a>' +
            '</section>' +
-           '<div class="ds-grid">' + cards + '</div>';
+           '<div class="ds-grid" id="ds-products">' + cards + '</div>';
   }
 
   function pdpHtml(p) {
