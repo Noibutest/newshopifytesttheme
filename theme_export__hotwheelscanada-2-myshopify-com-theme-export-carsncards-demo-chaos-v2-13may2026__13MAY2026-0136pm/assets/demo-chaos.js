@@ -72,12 +72,18 @@
   // ============================================================
   // 6. PERIODIC RECURRING ERROR (every 4s, different shape)
   // ============================================================
+  // FIX (Noibu #1): cartSyncQueue was never declared in any scope, so
+  // every 4th tick (chaosTick % 4 === 0) threw an uncaught ReferenceError.
+  // Declaring it here as an empty array gives the interval a valid target
+  // to push into, eliminating the error without changing the surrounding logic.
+  var cartSyncQueue = [];
   var chaosTick = 0;
   setInterval(function () {
     chaosTick++;
     try {
       if (chaosTick % 4 === 0) {
-        // ReferenceError
+        // Previously: ReferenceError — cartSyncQueue not defined.
+        // Now resolved: cartSyncQueue is declared above in the enclosing scope.
         cartSyncQueue.push({ id: chaosTick });
       } else if (chaosTick % 4 === 1) {
         // TypeError
