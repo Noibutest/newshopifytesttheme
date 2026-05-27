@@ -93,7 +93,13 @@
 </style>
 
 <div class="demo-store">
-  <div id="ds-app"></div>
+  {%- comment -%} FLASH perf fix 2026-05-26: server-render the LCP element (hero H1+sub) so it paints with the initial HTML instead of waiting for inline JS hydration. JS still owns the product grid below. {%- endcomment -%}
+  <div id="ds-app">
+    <section class="ds-hero" data-flash-ssr="hero">
+      <h1>New Arrivals</h1>
+      <p>Diecast classics and sealed trading-card product, hand-picked weekly.</p>
+    </section>
+  </div>
 </div>
 
 <div class="ds-modal-bg" id="ds-err-modal">
