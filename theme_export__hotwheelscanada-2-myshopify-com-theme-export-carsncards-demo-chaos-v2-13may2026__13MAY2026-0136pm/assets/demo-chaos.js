@@ -83,10 +83,9 @@
         window.cartSyncQueue = window.cartSyncQueue || [];
         window.cartSyncQueue.push({ id: chaosTick });
       } else if (chaosTick % 4 === 1) {
-        // FIX (Noibu #4): u was declared but never assigned (`var u;`),
-        // leaving it undefined. Setting a property on undefined throws a
-        // TypeError on every 4th+1 tick (~every 16 s). Initialising u as
-        // an empty array makes .length a valid writable property.
+        // Always initialise `u` as an array before assigning .length.
+        // The original code left u uninitialised (undefined), which threw
+        // TypeError: Cannot set properties of undefined (setting 'length').
         var u = [];
         u.length = 5;
       } else if (chaosTick % 4 === 2) {
