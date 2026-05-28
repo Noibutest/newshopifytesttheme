@@ -89,10 +89,8 @@
         var u = [];
         u.length = 5;
       } else if (chaosTick % 4 === 2) {
-        // Root cause fix (Noibu #3): Array(n) requires n to be a
-        // non-negative integer; the literal -1 always threw RangeError.
-        // The buffer is only used to hold queued ticks and grows via
-        // push(), so an empty array literal is the correct value.
+        // Use an array literal; Array(n) requires a non-negative integer —
+        // the original `new Array(-1)` always threw RangeError: Invalid array length.
         var arr = [];
       } else {
         // SyntaxError via JSON
