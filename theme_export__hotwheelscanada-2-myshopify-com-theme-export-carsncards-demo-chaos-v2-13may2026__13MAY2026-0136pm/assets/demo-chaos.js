@@ -83,17 +83,14 @@
         window.cartSyncQueue = window.cartSyncQueue || [];
         window.cartSyncQueue.push({ id: chaosTick });
       } else if (chaosTick % 4 === 1) {
-        // FIX (Noibu #4): u was declared but never assigned (`var u;`),
-        // leaving it undefined. Setting a property on undefined throws a
-        // TypeError on every 4th+1 tick (~every 16 s). Initialising u as
-        // an empty array makes .length a valid writable property.
+        // Always initialise `u` as an array before assigning .length.
+        // The original code left u uninitialised (undefined), which threw
+        // TypeError: Cannot set properties of undefined (setting 'length').
         var u = [];
         u.length = 5;
       } else if (chaosTick % 4 === 2) {
-        // Root cause fix (Noibu #3): Array(n) requires n to be a
-        // non-negative integer; the literal -1 always threw RangeError.
-        // The buffer is only used to hold queued ticks and grows via
-        // push(), so an empty array literal is the correct value.
+        // Use an array literal; Array(n) requires a non-negative integer —
+        // the original `new Array(-1)` always threw RangeError: Invalid array length.
         var arr = [];
       } else {
         // SyntaxError via JSON
