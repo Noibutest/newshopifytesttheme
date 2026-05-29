@@ -20,8 +20,12 @@
     display: flex; flex-direction: column;
   }
   .demo-store .ds-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.08); border-color: #d1d5db; }
+  /* sally-demo 2026-05-26: shortened the product-card thumbnail (4/3 -> 16/9).
+     Noibu scrollmap on / showed ~32% of desktop viewers stop at the 40-45% page-height mark,
+     right at the bottom of the third product row. A shorter thumb compresses each card
+     by ~40px, so a fourth (and partial fifth) row of products now sits above the typical stop. */
   .demo-store .ds-thumb {
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 16 / 9;
     display: flex; align-items: center; justify-content: center;
     font-size: 64px;
     background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
