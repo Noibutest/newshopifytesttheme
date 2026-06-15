@@ -92,11 +92,14 @@
         var u = new Array(0); // was: var u; — undefined caused TypeError
         u.length = 5;
       } else if (chaosTick % 4 === 2) {
-        // Root cause fix (Noibu #3): Array(n) requires n to be a
-        // non-negative integer; the literal -1 always threw RangeError.
-        // The buffer is only used to hold queued ticks and grows via
-        // push(), so an empty array literal is the correct value.
-        var arr = [];
+        // fix(periodic-chaos): RangeError on Array(-1) — Noibu #3
+        // Root cause: `new Array(-1)` — Array() requires a non-negative integer
+        // length argument; passing -1 always threw RangeError: "Invalid array
+        // length" on every 4th+2 tick (~16 s on active pages).
+        // Fix: use an array literal [] and record the tick via push() so the
+        // buffer is well-defined and the branch runs without error.
+        var arr = []; // was: new Array(-1) — negative arg caused RangeError
+        arr.push(chaosTick);
       } else {
         // SyntaxError via JSON
         JSON.parse('{not valid json' + chaosTick);
