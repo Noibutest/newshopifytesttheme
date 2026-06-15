@@ -102,8 +102,11 @@
     <div class="ds-msg" id="ds-err-msg">We couldn't add this item to your cart. Please try again or contact support.</div>
     <pre id="ds-err-trace"></pre>
     <div class="ds-actions">
-      <button class="ds-btn-secondary" onclick="dsCloseErr()">Dismiss</button>
+      <!-- Sally-demo(clickmap): Dismiss was clicked 2× vs Try again 1× after ATC errors.
+           Users default to the leftmost button. Moved Try again (recovery) to the
+           first/left position so the default action is retry, not exit. -->
       <button class="ds-btn-primary" onclick="dsCloseErr()">Try again</button>
+      <button class="ds-btn-secondary" onclick="dsCloseErr()">Dismiss</button>
     </div>
   </div>
 </div>
@@ -124,7 +127,7 @@
       desc: 'Mega box format. Look for exclusive Pink Pulsar Prizm parallels only available in Megas. 10 inserts per box on average.' },
     { id: 'cnc-006', sku: 'DC-CUD-70',  name: "1970 Plymouth Hemi 'Cuda",                sub: '1:18 Diecast • GMP',                 price: 94.99,  emoji: '🚘', stock: 3,
       desc: 'Plum Crazy purple with shaker hood. Numbered limited edition with certificate. Working suspension and steering. A grail piece for any muscle-car collector.' },
-    { id: 'cnc-007', sku: 'TC-PKM-SV',  name: 'Pokemon TCG: Scarlet & Violet Booster Box', sub: '36 packs • 10 cards per pack',     price: 129.99, emoji: '🎴', stock: 6,
+    { id: 'cnc-007', sku: 'TC-PKM-SV',  name: 'Pokemon TCG: Scarlet & Violet Booster Box', sub: '36 packs • 10 cards per pack',     price: 129.99, emoji: '🂴', stock: 6,
       desc: 'Sealed 36-pack booster box. Features new Pokemon ex cards and Tera Crystal effects. Pull rates approximately 1 ultra-rare per 4 packs.' },
     { id: 'cnc-008', sku: 'DC-MUS-65',  name: '1965 Ford Mustang Fastback',              sub: '1:24 Diecast • Welly',               price: 42.99,  emoji: '🏁', stock: 22,
       desc: 'Wimbledon White with red interior. Pony wheel covers and full chrome trim. Opening doors and hood, detailed 289 V8.' },
