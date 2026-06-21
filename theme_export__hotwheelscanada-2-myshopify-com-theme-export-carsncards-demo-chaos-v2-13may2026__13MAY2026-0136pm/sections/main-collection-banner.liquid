@@ -24,6 +24,10 @@
 
     {%- if section.settings.show_collection_image and collection.image -%}
       <div class="collection-hero__image-container media gradient">
+        <!-- FLASH perf fix 2026-05-20: Added fetchpriority="high" and loading="eager" to
+             collection banner LCP image. Previously the image had no priority hint, causing
+             the browser to deprioritise the fetch and contributing to FCP p75 of 3753ms on
+             /collections/all. Never lazy-load the LCP element. -->
         <img
           srcset="
             {%- if collection.image.width >= 165 -%}{{ collection.image | image_url: width: 165 }} 165w,{%- endif -%}
@@ -39,6 +43,8 @@
           alt="{{ collection.image.alt | escape }}"
           width="{{ collection.image.width }}"
           height="{{ collection.image.height }}"
+          fetchpriority="high"
+          loading="eager"
         >
       </div>
     {%- endif -%}
