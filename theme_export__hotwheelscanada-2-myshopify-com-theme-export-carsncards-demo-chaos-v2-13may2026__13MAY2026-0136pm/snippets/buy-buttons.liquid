@@ -60,6 +60,24 @@
           {%- render 'gift-card-recipient-form', product: product, form: form, section: section -%}
         {%- endif -%}
 
+        {%- comment -%} Trust badge strip — renders above ATC when product is available {%- endcomment -%}
+        {%- if product.selected_or_first_available_variant.available -%}
+          <div class="product__trust-badges" style="display:flex;gap:1rem;align-items:center;justify-content:flex-start;margin:0 0 1rem;flex-wrap:wrap;">
+            <span class="product__trust-badge" style="display:flex;align-items:center;gap:0.35rem;font-size:0.8em;color:inherit;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+              {{ 'products.product.trust.free_shipping' | t | default: 'Free shipping' }}
+            </span>
+            <span class="product__trust-badge" style="display:flex;align-items:center;gap:0.35rem;font-size:0.8em;color:inherit;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              {{ 'products.product.trust.secure_checkout' | t | default: 'Secure checkout' }}
+            </span>
+            <span class="product__trust-badge" style="display:flex;align-items:center;gap:0.35rem;font-size:0.8em;color:inherit;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.95"/></svg>
+              {{ 'products.product.trust.easy_returns' | t | default: 'Easy returns' }}
+            </span>
+          </div>
+        {%- endif -%}
+
         <div class="product-form__buttons">
           {%- liquid
             assign check_against_inventory = true
