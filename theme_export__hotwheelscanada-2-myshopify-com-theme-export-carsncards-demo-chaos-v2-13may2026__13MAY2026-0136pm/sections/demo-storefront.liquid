@@ -9,6 +9,22 @@
   .demo-store .ds-hero { padding: 16px 0 24px; }
   .demo-store .ds-hero h1 { margin: 0 0 6px; font-size: 30px; }
   .demo-store .ds-hero p { margin: 0; color: #6b7280; }
+  /* Sally Demo 2026-05-20: Clickmap shows 0 product CTAs clicked across 19 homepage sessions.
+     The only recorded click was the Contact nav link. Adding a Shop CTA to give users an explicit
+     path into the product grid directly from the hero. */
+  .demo-store .ds-hero .ds-hero-cta {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 10px 20px;
+    background: #111;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background .15s;
+  }
+  .demo-store .ds-hero .ds-hero-cta:hover { background: #1f2937; }
   .demo-store .ds-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -124,7 +140,7 @@
       desc: 'Mega box format. Look for exclusive Pink Pulsar Prizm parallels only available in Megas. 10 inserts per box on average.' },
     { id: 'cnc-006', sku: 'DC-CUD-70',  name: "1970 Plymouth Hemi 'Cuda",                sub: '1:18 Diecast • GMP',                 price: 94.99,  emoji: '🚘', stock: 3,
       desc: 'Plum Crazy purple with shaker hood. Numbered limited edition with certificate. Working suspension and steering. A grail piece for any muscle-car collector.' },
-    { id: 'cnc-007', sku: 'TC-PKM-SV',  name: 'Pokemon TCG: Scarlet & Violet Booster Box', sub: '36 packs • 10 cards per pack',     price: 129.99, emoji: '🎴', stock: 6,
+    { id: 'cnc-007', sku: 'TC-PKM-SV',  name: 'Pokemon TCG: Scarlet & Violet Booster Box', sub: '36 packs • 10 cards per pack',     price: 129.99, emoji: '🂴', stock: 6,
       desc: 'Sealed 36-pack booster box. Features new Pokemon ex cards and Tera Crystal effects. Pull rates approximately 1 ultra-rare per 4 packs.' },
     { id: 'cnc-008', sku: 'DC-MUS-65',  name: '1965 Ford Mustang Fastback',              sub: '1:24 Diecast • Welly',               price: 42.99,  emoji: '🏁', stock: 22,
       desc: 'Wimbledon White with red interior. Pony wheel covers and full chrome trim. Opening doors and hood, detailed 289 V8.' },
@@ -151,8 +167,11 @@
     return '<section class="ds-hero">' +
              '<h1>New Arrivals</h1>' +
              '<p>Diecast classics and sealed trading-card product, hand-picked weekly.</p>' +
+             // Sally Demo 2026-05-20: clickmap shows 0 product CTAs clicked across 19 sessions;
+             // adding explicit CTA so users have a clear path into the product grid
+             '<a href="#ds-product-grid" class="ds-hero-cta">Shop All Products →</a>' +
            '</section>' +
-           '<div class="ds-grid">' + cards + '</div>';
+           '<div class="ds-grid" id="ds-product-grid">' + cards + '</div>';
   }
 
   function pdpHtml(p) {
