@@ -9,6 +9,16 @@
   .demo-store .ds-hero { padding: 16px 0 24px; }
   .demo-store .ds-hero h1 { margin: 0 0 6px; font-size: 30px; }
   .demo-store .ds-hero p { margin: 0; color: #6b7280; }
+  /* Sally Demo: CTA button added to hero — clickmap showed 0 product-area clicks across 37 visits;
+     only recorded interaction was Contact nav link. A prominent hero CTA routes visitors
+     toward the catalogue before they navigate away. */
+  .demo-store .ds-hero .ds-shop-cta {
+    display: inline-block; margin-top: 16px;
+    background: #111; color: #fff; text-decoration: none;
+    padding: 12px 24px; border-radius: 10px; font-size: 15px; font-weight: 700;
+    transition: background .15s;
+  }
+  .demo-store .ds-hero .ds-shop-cta:hover { background: #1f2937; }
   .demo-store .ds-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -151,6 +161,11 @@
     return '<section class="ds-hero">' +
              '<h1>New Arrivals</h1>' +
              '<p>Diecast classics and sealed trading-card product, hand-picked weekly.</p>' +
+             // Sally Demo: Added "Shop All Products" CTA button to hero — clickmap (CLICKS, last 30 days)
+             // shows 37 homepage visits with exactly 1 click recorded, and that single click went to the
+             // Contact nav link rather than any product. A prominent hero CTA routes visitors toward the
+             // catalogue before they navigate away.
+             '<a href="/collections/all" class="ds-shop-cta">Shop All Products &rarr;</a>' +
            '</section>' +
            '<div class="ds-grid">' + cards + '</div>';
   }
