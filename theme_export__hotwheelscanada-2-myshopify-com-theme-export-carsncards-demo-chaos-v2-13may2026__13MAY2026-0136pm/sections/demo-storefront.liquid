@@ -32,6 +32,17 @@
   .demo-store .ds-meta { font-size: 12px; color: #6b7280; margin-bottom: 8px; }
   .demo-store .ds-price { font-size: 16px; font-weight: 700; color: #111; }
 
+  /* Sally Demo: clickmap CLICKS on / showed 37 visits with 0 card clicks — only
+     interaction was the Contact nav link (#HeaderMenu-contact > span:nth-of-type(1)).
+     Added .ds-view-btn to make each card's action explicit and give Noibu a trackable selector. */
+  .demo-store .ds-view-btn {
+    display: inline-block; margin-top: 10px;
+    font-size: 13px; font-weight: 600; color: #111;
+    border-bottom: 1px solid #d1d5db; padding-bottom: 1px;
+    transition: color .15s, border-color .15s;
+  }
+  .demo-store .ds-card:hover .ds-view-btn { color: #1d4ed8; border-color: #1d4ed8; }
+
   .demo-store .ds-pdp { display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px; margin-top: 8px; }
   .demo-store .ds-gallery {
     aspect-ratio: 1; background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
@@ -124,7 +135,7 @@
       desc: 'Mega box format. Look for exclusive Pink Pulsar Prizm parallels only available in Megas. 10 inserts per box on average.' },
     { id: 'cnc-006', sku: 'DC-CUD-70',  name: "1970 Plymouth Hemi 'Cuda",                sub: '1:18 Diecast • GMP',                 price: 94.99,  emoji: '🚘', stock: 3,
       desc: 'Plum Crazy purple with shaker hood. Numbered limited edition with certificate. Working suspension and steering. A grail piece for any muscle-car collector.' },
-    { id: 'cnc-007', sku: 'TC-PKM-SV',  name: 'Pokemon TCG: Scarlet & Violet Booster Box', sub: '36 packs • 10 cards per pack',     price: 129.99, emoji: '🎴', stock: 6,
+    { id: 'cnc-007', sku: 'TC-PKM-SV',  name: 'Pokemon TCG: Scarlet & Violet Booster Box', sub: '36 packs • 10 cards per pack',     price: 129.99, emoji: '🃴', stock: 6,
       desc: 'Sealed 36-pack booster box. Features new Pokemon ex cards and Tera Crystal effects. Pull rates approximately 1 ultra-rare per 4 packs.' },
     { id: 'cnc-008', sku: 'DC-MUS-65',  name: '1965 Ford Mustang Fastback',              sub: '1:24 Diecast • Welly',               price: 42.99,  emoji: '🏁', stock: 22,
       desc: 'Wimbledon White with red interior. Pony wheel covers and full chrome trim. Opening doors and hood, detailed 289 V8.' },
@@ -138,6 +149,10 @@
   function money(n) { return '$' + n.toFixed(2); }
 
   function gridHtml() {
+    // Sally Demo: clickmap CLICKS on / showed 37 visits with 0 card clicks.
+    // The only recorded interaction was 1 click on #HeaderMenu-contact (the Contact nav link).
+    // Cards had hover effects but no visible CTA — added "View Details →" to each card so
+    // the action is explicit and Noibu can track clicks on .ds-view-btn as a distinct selector.
     var cards = PRODUCTS.map(function (p) {
       return '<div class="ds-card" data-id="' + p.id + '">' +
                '<div class="ds-thumb">' + p.emoji + '</div>' +
@@ -145,6 +160,7 @@
                  '<div class="ds-title">' + p.name + '</div>' +
                  '<div class="ds-meta">' + p.sub + '</div>' +
                  '<div class="ds-price">' + money(p.price) + '</div>' +
+                 '<div class="ds-view-btn">View Details &#8594;</div>' +
                '</div>' +
              '</div>';
     }).join('');
