@@ -155,7 +155,14 @@
               {% assign skip_card_product_styles = false %}
               {%- for product in collection.products -%}
                 {% assign lazy_load = false %}
-                {%- if forloop.index > 2 -%}
+                {%- comment -%}
+                  Sally Demo: scrollmap on /collections/all showed both visitors scrolled 95-100%
+                  of a 1,389px page (barely > 1 viewport at 900px). Products 3-4 in the first row
+                  of a 4-col desktop grid had loading="lazy", risking stalled above-fold image renders.
+                  Threshold raised from index > 2 to index > 4 so the full first desktop row
+                  (columns_desktop default = 4) always loads eagerly.
+                {%- endcomment -%}
+                {%- if forloop.index > 4 -%}
                   {%- assign lazy_load = true -%}
                 {%- endif -%}
                 <li
