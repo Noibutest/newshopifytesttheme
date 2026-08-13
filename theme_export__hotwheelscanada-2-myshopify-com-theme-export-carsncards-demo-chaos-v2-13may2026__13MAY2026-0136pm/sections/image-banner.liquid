@@ -131,16 +131,34 @@
               <p>{{ block.settings.text }}</p>
             </div>
           {%- when 'buttons' -%}
+            {%- comment -%}
+              Accessibility: a link set to a bare "#" is a same-page link with no
+              matching target. It is announced as a link, takes focus and accepts
+              activation, but navigates nowhere - the user gets no feedback that
+              anything failed. Normalise "#" to blank so these buttons take the
+              aria-disabled path below instead of promising navigation.
+              WCAG 2.4.4 / 4.1.2.
+            {%- endcomment -%}
+            {%- liquid
+              assign button_link_1 = block.settings.button_link_1
+              assign button_link_2 = block.settings.button_link_2
+              if button_link_1 == '#'
+                assign button_link_1 = blank
+              endif
+              if button_link_2 == '#'
+                assign button_link_2 = blank
+              endif
+            -%}
             <div
               class="banner__buttons{% if block.settings.button_label_1 != blank and block.settings.button_label_2 != blank %} banner__buttons--multiple{% endif %}"
               {{ block.shopify_attributes }}
             >
               {%- if block.settings.button_label_1 != blank -%}
                 <a
-                  {% if block.settings.button_link_1 == blank %}
+                  {% if button_link_1 == blank %}
                     role="link" aria-disabled="true"
                   {% else %}
-                    href="{{ block.settings.button_link_1 }}"
+                    href="{{ button_link_1 }}"
                   {% endif %}
                   class="button{% if block.settings.button_style_secondary_1 %} button--secondary{% else %} button--primary{% endif %}"
                 >
@@ -149,10 +167,10 @@
               {%- endif -%}
               {%- if block.settings.button_label_2 != blank -%}
                 <a
-                  {% if block.settings.button_link_2 == blank %}
+                  {% if button_link_2 == blank %}
                     role="link" aria-disabled="true"
                   {% else %}
-                    href="{{ block.settings.button_link_2 }}"
+                    href="{{ button_link_2 }}"
                   {% endif %}
                   class="button{% if block.settings.button_style_secondary_2 %} button--secondary{% else %} button--primary{% endif %}"
                 >
