@@ -35,7 +35,13 @@
     </div>
 
     <div class="cart__warnings">
-      <h1 class="cart__empty-text">{{ 'sections.cart.empty' | t }}</h1>
+      {%- comment -%}
+        Accessibility: this empty-state message sits directly beneath the page
+        <h1> above, so it must be an <h2>. It was previously a second <h1>,
+        which left the page with two top-level headings and produced a skipped
+        level in the rendered outline. WCAG 1.3.1.
+      {%- endcomment -%}
+      <h2 class="cart__empty-text">{{ 'sections.cart.empty' | t }}</h2>
       <a href="{{ routes.all_products_collection_url }}" class="button">
         {{ 'general.continue_shopping' | t }}
       </a>
