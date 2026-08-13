@@ -100,14 +100,28 @@
   }
 {%- endstyle -%}
 
+{%- comment -%}
+  Accessibility: the heading element is derived from the selected heading
+  size so the semantic level matches the visual level. A heading that only
+  looks like a heading (large/bold text on a generic element, or a level
+  chosen for styling rather than structure) is not announced or navigable
+  as a heading by assistive technology. WCAG 1.3.1 / 2.4.6.
+{%- endcomment -%}
+{%- liquid
+  assign heading_tag = 'h2'
+  if section.settings.heading_size == 'h1' or section.settings.heading_size == 'h0' or section.settings.heading_size == 'hxl'
+    assign heading_tag = 'h1'
+  endif
+-%}
+
 <div class="search-hero color-{{ section.settings.color_scheme }}">
   {%- unless section.settings.tagline == blank -%}
     <p class="search-hero__tagline">{{ section.settings.tagline }}</p>
   {%- endunless -%}
   {%- unless section.settings.heading == blank -%}
-    <h2 class="search-hero__heading {{ section.settings.heading_size }}">
+    <{{ heading_tag }} class="search-hero__heading {{ section.settings.heading_size }}">
       {{ section.settings.heading }}
-    </h2>
+    </{{ heading_tag }}>
   {%- endunless -%}
   <form action="{{ routes.search_url }}" method="get" role="search" class="search-hero__form">
     <input type="search" name="q" class="search-hero__input" placeholder="{{ section.settings.placeholder | escape }}" aria-label="Search products">
@@ -139,7 +153,7 @@
   "settings": [
     { "type": "text", "id": "tagline", "label": "Tagline", "default": "Canada's #1 Collectibles Store" },
     { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Find Your Next Grail" },
-    { "type": "select", "id": "heading_size", "options": [{ "value": "h2", "label": "Small" }, { "value": "h1", "label": "Medium" }, { "value": "h0", "label": "Large" }, { "value": "hxl", "label": "Extra Large" }], "default": "h0", "label": "Heading size" },
+    { "type": "select", "id": "heading_size", "options": [{ "value": "h2", "label": "Small" }, { "value": "h1", "label": "Medium" }, { "value": "h0", "label": "Large" }, { "value": "hxl", "label": "Extra Large" }], "default": "h0", "label": "Heading size", "info": "Medium, Large and Extra Large render a semantic <h1>. Small renders an <h2> for use when the page already has an H1." },
     { "type": "text", "id": "placeholder", "label": "Search placeholder", "default": "Search die-cast, Pokemon, F1..." },
     { "type": "checkbox", "id": "show_trust_badges", "label": "Show trust badges", "default": true },
     { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" }
